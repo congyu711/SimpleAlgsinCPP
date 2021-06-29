@@ -9,6 +9,7 @@ void solve(LL k,LL sum)
     if(sum>t)  return ;
     if(sum+s[n]-s[k-1]<=ans) return;
     if(k==n+1)    {ans=max(ans,sum);return;}
+    if(ans==t)  return;
     solve(k+1,sum+a[k]);
     solve(k+1,sum);
 }
