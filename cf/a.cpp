@@ -4,21 +4,21 @@ const int N = 1e6 + 10;
 typedef long long LL;
 const LL inf = INTMAX_MAX;
 const int mod = 1e9 + 7;
-LL arr[N];
-LL l,r;
+
 void solve()
 {   
-    LL n,x,k;
-    cin>>n>>x>>k;
-    LL res=k/x;
-    //cout<<res<<endl;
-    if(n<=res+1)
+    LL a,b;
+    cin>>a>>b;
+    LL ans=abs(a-b);
+    if(ans==0)
     {
-        cout<<n*(n-1)/2LL<<endl;
+        cout<<"0 0"<<endl;
+        return;
     }
     else
     {
-        cout<<res*(res+1)/2LL+(n-1-res)*res<<endl;
+        LL c=max(a,b)%ans,c1=ans-c;
+        cout<<ans<<' '<<min(c,c1)<<endl;
     }
 }
 int main()

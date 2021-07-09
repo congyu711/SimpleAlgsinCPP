@@ -4,9 +4,11 @@ int main()
 {
     srand(time(NULL));
     ofstream outfile("testcase.in");
-    outfile<<"40 "<<rand()<<endl;
-    for(int i=1;i<=40;i++)
+    outfile<<"250 250"<<endl;
+    for(int i=1;i<=250;i++)
     {
-        outfile<<rand()<<endl;
+        for(int j=1;j<=250;j++)
+            outfile<<'a';
+        outfile<<endl;
     }
 }
