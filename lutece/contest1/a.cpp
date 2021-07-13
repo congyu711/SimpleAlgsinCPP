@@ -1,21 +1,20 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int N = 1e6+10;
+const int N = 2e5 + 10;
 typedef long long LL;
-LL n,m,q,p,k;
-int x[N];
+const LL inf = INTMAX_MAX;
+const int mod = 1e9 + 7;
+LL a[N],b[N];
+LL n,m;
 int main()
 {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
-    cin>>n>>m>>q;
-    for(int i=1;i<=n;i++)   cin>>x[i];
-    for(int i=1;i<=q;i++)
-    {
-        cin>>p>>k;
-        LL len=(LL)x[k]*p;
-        len%=(2*m);
-        if(len>m)cout<<2*m-len<<endl;
-        else cout<<len<<endl;
-    }
+    cin>>n>>m;
+    for(int i=1;i<=n;i++)   cin>>a[i];
+    for(int i=1;i<=m;i++)   cin>>b[i];
+    LL gcd=a[1];
+    for(int i=2;i<=n;i++)   gcd=__gcd(gcd,a[i]);
+    
+    
 }

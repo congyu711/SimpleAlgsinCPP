@@ -62,9 +62,3 @@ int main()
     while(T--)
         solve();
 }
-
-/*
-1
-4
-1 2 4 8
-*/
