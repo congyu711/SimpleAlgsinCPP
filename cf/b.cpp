@@ -6,39 +6,34 @@ const LL inf = INTMAX_MAX;
 const int mod = 1e9 + 7;
 void solve()
 {
-    string s; 
+    int a,b,n;
+    string s;
+    cin>>n>>a>>b;
     cin>>s;
-    int l=-1,r=-1;
-    for(int i=0;i<s.length();i++)
+    vector<int> f;
+    for(int i=0;i<s.length();)
     {
-        if(s[i]=='a')   l=r=i;
+        int cnt=0;
+        char c=s[i];
+        while(i<s.length()&&s[i]==c)
+        {
+            cnt++;
+            i++;
+        }
+        f.push_back(cnt);
     }
-    if(l==-1)
+    // for(auto e:f)   cout<<e<<endl;
+    if(b>0)
     {
-        cout<<"NO"<<endl;
-        return;
+        cout<<a*n+b*n<<endl;
     }
-    for(int i=1;i<s.length();i++)
+    else
     {
-        char c=(char)('a'+i);
-        bool f=0;
-        if(l>0&&s[l-1]==c)
-        {
-            l--;
-            f=1;
-        }
-        else if(r<(s.length()-1)&&s[r+1]==c)
-        {
-            r++;
-            f=1;
-        }
-        if(f==0)
-        {
-            cout<<"NO"<<endl;
-            return;
-        }
+        int ans=0;
+        ans+=(a*n);
+        ans+=((f.size()+2)/2)*b;
+        cout<<ans<<endl;
     }
-    cout<<"YES"<<endl;
 }
 int main()
 {

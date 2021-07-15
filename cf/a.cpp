@@ -4,14 +4,17 @@ const int N = 1e6 + 10;
 typedef long long LL;
 const LL inf = INTMAX_MAX;
 const int mod = 1e9 + 7;
-
+vector<int> a;
 void solve()
 {   
-    int xa,ya,xb,yb,a,b;
-    cin>>xa>>ya>>xb>>yb>>a>>b;
-    if(ya==yb&&yb==b&&a<max(xa,xb)&&a>min(xa,xb))  cout<<abs(xa-xb)+abs(ya-yb)+2<<endl;
-    else if(xa==xb&&xb==a&&b<max(ya,yb)&&b>min(ya,yb)) cout<<abs(xa-xb)+abs(ya-yb)+2<<endl;
-    else    cout<<abs(xa-xb)+abs(ya-yb)<<endl;
+    LL s;
+    cin>>s;
+    int i=0;
+    for(i=0;i<a.size();i++)
+    {
+        if(a[i]>=s)  break;
+    }
+    cout<<i+1<<endl;
 }
 int main()
 {
@@ -19,6 +22,12 @@ int main()
     cin.tie(NULL);
     int t;
     cin >> t;
+    for(int i=1;i*i<=6000;i++)
+    {
+        a.push_back(i*i);
+    }
+    // for(auto e:a)   cout<<e<<' ';
+    // cout<<endl;
     while (t--)
         solve();
 }

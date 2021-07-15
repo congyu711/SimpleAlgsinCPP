@@ -4,46 +4,39 @@ const int N = 2e5 + 10;
 typedef long long LL;
 const LL inf = INTMAX_MAX;
 const int mod = 1e9+7;
-
+int n;
+int a[N];
 
 void solve()
 {
-    int k,n,m;
-    cin>>k>>n>>m;
-    vector<int> a(n+1),b(m+1);
+    cin>>n;
     for(int i=1;i<=n;i++)   cin>>a[i];
-    for(int i=1;i<=m;i++)   cin>>b[i];
-    vector<int> ans;
-    for(int i=1,j=1;i<=n||j<=m;)
+    
+    LL ans=0;
+    ans+=n;ans+=(n-1);
+    if(n>=3) 
+    for(int i=1;i<n-1;i++)
     {
-        if(i<=n&&a[i]==0)
+        if((a[i+2]>=a[i+1]&&a[i+1]>=a[i])||(a[i+2]<=a[i+1]&&a[i+1]<=a[i])) ;
+        else ans++;
+    }
+    if(n>=4)
+    {
+        for(int i=1;i<n-2;i++)
+        for(int j=0;j<=3;j++)
         {
-            ans.push_back(0);
-            i++;k++;
-        }
-        else if(j<=m&&b[j]==0)
-        {
-            ans.push_back(0);
-            j++;k++;
-        }
-        else if(i<=n&&a[i]<=k)
-        {
-            ans.push_back(a[i]);
-            i++;
-        }
-        else if(j<=m&&b[j]<=k)
-        {
-            ans.push_back(b[j]);
-            j++;
-        }
-        else
-        {
-            cout<<-1<<endl;
-            return;
+            vector<int> f;
+            for(int k=0;k<4;k++)
+            {
+                if(k==j)    continue;
+                f.push_back(a[i+k]);
+            }
+            for(auto e:f)   cout<<e<<endl;
+            if((f[0+2]>=f[0+1]&&f[0+1]>=f[0])||(f[0+2]<=f[0+1]&&f[0+1]<=f[0])) ;
+            else ans++;
         }
     }
-    for(auto e:ans) cout<<e<<' ';
-    cout<<endl;
+    cout<<ans<<endl;
 }
 int main()
 {
@@ -54,7 +47,3 @@ int main()
     while(T--)
         solve();
 }
-/*
-1
-0.2 0.2 0.6 0.2
-*/
