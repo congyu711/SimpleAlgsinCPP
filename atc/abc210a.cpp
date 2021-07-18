@@ -4,20 +4,29 @@ const int N = 2e5 + 10;
 typedef long long LL;
 const LL inf = INTMAX_MAX;
 const int mod = 1e9 + 7;
-int h,w;
-int a[22][22];
-int dir[3]={-1,0,1};
+
+
+
 void solve()
 {
-    cin>>h>>w;
-    
+    int n,a,x,y;
+    cin>>n>>a>>x>>y;
+    LL ans=0;
+    if(n>=a)
+    {
+        cout<<a*x+(n-a)*y<<endl;
+    }
+    else
+    {
+        cout<<n*x<<endl;
+    }
 }
 int main()
 {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
-    int t;
-    cin >> t;
-    while (t--)
+    // int T;
+    // cin>>T;
+    // while(T--)
         solve();
 }

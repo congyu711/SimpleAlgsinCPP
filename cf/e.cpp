@@ -8,9 +8,7 @@ int n,k;
 LL a[N],t[N];
 void solve()
 {
-    cin>>n>>k;
-    for(int i=1;i<=k;i++)   cin>>a[i];
-    for(int i=1;i<=k;i++)   cin>>t[i];
+    
     
 }
 int main()

@@ -1,23 +1,20 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int N = 1e6 + 10;
+const int N = 1e5 + 10;
 typedef long long LL;
 const LL inf = INTMAX_MAX;
 const int mod = 1e9 + 7;
-LL n;
+LL n,m;
+pair<LL,LL> e[N];
 
 
-
-void solve()
-{   
-    
-}
 int main()
 {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
-    int t;
-    cin >> t;
-    while (t--)
-        solve();
+    cin>>n>>m;
+    for(int i=1;i<=m;i++)
+        cin>>e[i].second>>e[i].first;
+    sort(e+1,e+m+1);
+    
 }
