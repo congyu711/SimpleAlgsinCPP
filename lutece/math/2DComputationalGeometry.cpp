@@ -56,9 +56,9 @@ public:
     }
 };
 
-//vector on xoy plane, so the crossdot result can be 
+//vector on xoy plane, so the crossporduct result can be 
 //describe with only one number Z.
-double crossdot(const _vector &a,const _vector &b)
+double crossporduct(const _vector &a,const _vector &b)
 {
     double z;
     z=a.x*b.y-a.y*b.x;
@@ -74,7 +74,7 @@ char linepointposition(Line &l,point p)
     }
     _vector bp(l.base,p);
 
-    double z=crossdot(bp,l.dir);
+    double z=crossporduct(bp,l.dir);
     // cout<<z<<endl;
     if(z<eps)  return 'o';
     else if(z<0)    return 'd';
@@ -112,7 +112,7 @@ public:
     _vector3d():x(0),y(0),z(0){}
 
 };
-_vector3d crossdot(const _vector3d &a,const _vector3d &b)
+_vector3d crossporduct(const _vector3d &a,const _vector3d &b)
 {
     _vector3d res(a.y*b.z-a.z*b.y,b.x*a.z-a.x*b.z,a.x*b.y-a.y*b.x);
     return res;
@@ -122,7 +122,7 @@ point line_intersection(Line l1,Line l2)
 {
     _vector3d   l1hc(l1.dir.y,-l1.dir.x,l1.dir.x*l1.base.y-l1.base.x*l1.dir.y),
                 l2hc(l2.dir.y,-l2.dir.x,l2.dir.x*l2.base.y-l2.base.x*l2.dir.y);
-    _vector3d res=crossdot(l1hc,l2hc);
+    _vector3d res=crossporduct(l1hc,l2hc);
     return point(res.x/res.z,res.y/res.z);
 }
 
@@ -143,7 +143,7 @@ double polygonarea(const polygon &a)
     for(int i=1;i<=n;i++)
     {
         _vector v1(base,a.points[i-1]),v2(base,a.points[i%n]);
-        res+=crossdot(v1,v2);
+        res+=crossporduct(v1,v2);
     }
     return res;
 }
