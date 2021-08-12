@@ -2,7 +2,7 @@
 using namespace std;
 
 const int n=10;
-const double e=1e8;
+const double e=1e7;
 int main()
 {
     mt19937 mt(time(nullptr));

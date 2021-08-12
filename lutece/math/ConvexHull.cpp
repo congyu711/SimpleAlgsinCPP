@@ -49,6 +49,8 @@ bool cmp2(const point &a, const point &b)
     return a.x<b.x;
 }
 vector<point> convexhull;
+
+//I suddenly find it wrong, fix later
 void Graham(const polygon &p)
 {
     //first find a point with minimum y; update base
@@ -106,6 +108,7 @@ int main()
 {
     polygon p;
     ifstream fin("polygon.in");
+    ofstream fout("convexhull.out");
     int n;
     fin>>n;
     double a,b;
@@ -114,8 +117,9 @@ int main()
         fin>>a>>b;
         p.pts.push_back(point(a,b));
     }
-    Graham(p);
+    Andrew(p);
     cout<<base.x<<' '<<base.y<<endl;
+    fout<<convexhull.size()<<endl;
     for(auto e:convexhull)
-        cout<<e.x<<' '<<e.y<<endl;
+        fout<<e.x<<' '<<e.y<<endl;
 }
