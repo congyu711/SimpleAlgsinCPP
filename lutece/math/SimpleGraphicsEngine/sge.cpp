@@ -52,14 +52,18 @@ int main()
     object o;
     o.tricnt=4;
     tri u;
-    u.pts.push_back(vec3d(1,0,0)),u.pts.push_back(vec3d(0,1,0)),u.pts.push_back(vec3d(0,0,0)); o.tris.push_back(u); u.pts.clear();
-    u.pts.push_back(vec3d(1,0,0)),u.pts.push_back(vec3d(0,1,0)),u.pts.push_back(vec3d(0,0,1)); o.tris.push_back(u); u.pts.clear();
-    u.pts.push_back(vec3d(1,0,0)),u.pts.push_back(vec3d(0,0,0)),u.pts.push_back(vec3d(0,0,1)); o.tris.push_back(u); u.pts.clear();
-    u.pts.push_back(vec3d(0,0,0)),u.pts.push_back(vec3d(0,1,0)),u.pts.push_back(vec3d(0,0,1)); o.tris.push_back(u); u.pts.clear();
+    u.pts.push_back(vec3d(1,0,0)),u.pts.push_back(vec3d(1,1,0)),u.pts.push_back(vec3d(1,0,1)); o.tris.push_back(u); u.pts.clear();
+    u.pts.push_back(vec3d(1,1,1)),u.pts.push_back(vec3d(1,1,0)),u.pts.push_back(vec3d(1,0,1)); o.tris.push_back(u); u.pts.clear();
+    u.pts.push_back(vec3d(1,1,1)),u.pts.push_back(vec3d(0,0,1)),u.pts.push_back(vec3d(1,0,1)); o.tris.push_back(u); u.pts.clear();
+    u.pts.push_back(vec3d(1,1,1)),u.pts.push_back(vec3d(0,0,1)),u.pts.push_back(vec3d(0,1,1)); o.tris.push_back(u); u.pts.clear();
+    u.pts.push_back(vec3d(1,1,1)),u.pts.push_back(vec3d(0,1,1)),u.pts.push_back(vec3d(1,1,0)); o.tris.push_back(u); u.pts.clear();
+    u.pts.push_back(vec3d(1,0,0)),u.pts.push_back(vec3d(1,0,1)),u.pts.push_back(vec3d(0,0,1)); o.tris.push_back(u); u.pts.clear();
+
+    
     double rotate_angle=0;
 
     sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML windows");
-    window.setFramerateLimit(144);
+    window.setFramerateLimit(60);
     int64_t frms=1,fps=0;
     sf::Font font;
     font.loadFromFile("/usr/share/fonts/truetype/abyssinica/AbyssinicaSIL-Regular.ttf");
