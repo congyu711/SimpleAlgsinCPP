@@ -1,9 +1,9 @@
 #include"sge.h"
 using namespace std;
 double scalingfactor;
+// ofstream fout("log.out");
 
-
-void getprojection(vector<sf::ConvexShape> &vec,const object &obj,const camera &cmr)
+void perspectiveprojection(vector<sf::ConvexShape> &vec,const object &obj,const camera &cmr)
 {
     vec.clear();
     for(auto tria:obj.tris)
@@ -11,7 +11,7 @@ void getprojection(vector<sf::ConvexShape> &vec,const object &obj,const camera &
         sf::ConvexShape tmp;tmp.setPointCount(3);
         tmp.setFillColor(sf::Color::Transparent);
         tmp.setOutlineColor(sf::Color::Red);
-        tmp.setOutlineThickness(2);
+        tmp.setOutlineThickness(1);
         for(int idx=0;idx<3;idx++)
         {
             auto t=tria.pts[idx];
@@ -28,14 +28,17 @@ void getprojection(vector<sf::ConvexShape> &vec,const object &obj,const camera &
                 ss>>f;
                 return f;
             };
-            tmp.setPoint(idx,sf::Vector2f(lambda(-lambda(id.y*scalingfactor,2)+cmr.snwidth/2,1),lambda(-lambda(id.z*scalingfactor,2)+cmr.snheight/2,1)));
-            cout<<lambda(-(id.y*scalingfactor)+cmr.snwidth/2,1)<<' '<<lambda(-(id.z*scalingfactor)+cmr.snheight/2,1)<<endl;
+            // cout<<id.z<<endl;
+            double  xx=lambda(-lambda(id.y*scalingfactor,2)+cmr.snwidth/2,1),
+                    yy=lambda(-lambda(id.z*scalingfactor,2)+cmr.snheight/2,1);
+            tmp.setPoint(idx,sf::Vector2f(xx,yy));
+            // fout<<xx<<" "<<yy<<"\n";
         }
 
         vec.push_back(tmp);
+        // fout<<"\n";
     }
 }
-
 int main()
 {
 
@@ -44,7 +47,7 @@ int main()
     cmr.snwidth=1280;
     cmr.pos=vec3d(-2,0,0);
     cmr.dir=vec3d(1,0,0);
-    scalingfactor=100;
+    scalingfactor=200;
 
     object o;
     o.tricnt=4;
@@ -53,20 +56,10 @@ int main()
     u.pts.push_back(vec3d(1,0,0)),u.pts.push_back(vec3d(0,1,0)),u.pts.push_back(vec3d(0,0,1)); o.tris.push_back(u); u.pts.clear();
     u.pts.push_back(vec3d(1,0,0)),u.pts.push_back(vec3d(0,0,0)),u.pts.push_back(vec3d(0,0,1)); o.tris.push_back(u); u.pts.clear();
     u.pts.push_back(vec3d(0,0,0)),u.pts.push_back(vec3d(0,1,0)),u.pts.push_back(vec3d(0,0,1)); o.tris.push_back(u); u.pts.clear();
-    //rotate
-    double rotate_angle=pi/12;
-    for(auto &triangle:o.tris)
-    {
-        for(auto &point:triangle.pts)
-        {
-            point.x=cos(rotate_angle)*point.x-sin(rotate_angle)*point.y;
-            point.y=sin(rotate_angle)*point.x+cos(rotate_angle)*point.y;
-        }
-    }
-
+    double rotate_angle=0;
 
     sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML windows");
-    window.setFramerateLimit(480);
+    window.setFramerateLimit(144);
     int64_t frms=1,fps=0;
     sf::Font font;
     font.loadFromFile("/usr/share/fonts/truetype/abyssinica/AbyssinicaSIL-Regular.ttf");
@@ -83,11 +76,27 @@ int main()
         }
         
 
+        rotate_angle=(pi/60);
+        for(auto &triangle:o.tris)
+        {
+            for(auto &point:triangle.pts)
+            {
+                double __dis=(point.x*point.x+point.y*point.y);
+                point.x=cos(rotate_angle)*point.x-sin(rotate_angle)*point.y;
+                point.y=sin(rotate_angle)*point.x+cos(rotate_angle)*point.y;
+                if((point.x*point.x+point.y*point.y)<1e-8)   continue;
+                point.x*=sqrt(__dis/(point.x*point.x+point.y*point.y));
+                point.y*=sqrt(__dis/(point.x*point.x+point.y*point.y));
+            }
+        }
 
         vector<sf::ConvexShape> vec;
-        getprojection(vec,o,cmr);
+        perspectiveprojection(vec,o,cmr);
         window.clear();
-        for(auto e:vec) {window.draw(e);window.display();}
+        for(auto e:vec)
+        {
+            window.draw(e);
+        }
 
         //get fps
         frms++;
@@ -99,9 +108,10 @@ int main()
         t.setColor(sf::Color::Green);
         t.setPosition(0,0);
         window.draw(t);
+
+
+
         window.display();
-
-
     }
     return 0;
 }
