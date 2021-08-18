@@ -3,7 +3,7 @@ using namespace std;
 double scalingfactor;
 // ofstream fout("log.out");
 
-//to be fixed. camera should be moveable;
+//to be fix. camera should be moveable;
 void perspectiveprojection(vector<sf::ConvexShape> &vec,const object &obj,const camera &cmr)
 {
     vec.clear();
@@ -64,7 +64,7 @@ int main()
     
     double rotate_angle=0;
     sf::ContextSettings settings;
-    settings.antialiasingLevel=8;
+    settings.antialiasingLevel=0;
     sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML windows",sf::Style::Default,settings);
     window.setFramerateLimit(60);
     int64_t frms=1,fps=0;
@@ -81,35 +81,18 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        
-
-        rotate_angle=(pi/60);
-        for(auto &triangle:o.tris)
-        {
-            for(auto &point:triangle.pts)
-            {
-                double __dis=(point.x*point.x+point.y*point.y);
-                point.x=cos(rotate_angle)*point.x-sin(rotate_angle)*point.y;
-                point.y=sin(rotate_angle)*point.x+cos(rotate_angle)*point.y;
-                if((point.x*point.x+point.y*point.y)<1e-8)   continue;
-                point.x=point.x*sqrt(__dis)/sqrt((point.x*point.x+point.y*point.y));
-                point.y=point.y*sqrt(__dis)/sqrt((point.x*point.x+point.y*point.y));
-            }
-        }
-
-        vector<sf::ConvexShape> vec;
-        perspectiveprojection(vec,o,cmr);
         window.clear();
-        //to be fix, 
-        for(auto e:vec)
-        {
-            // cout<<e.getPoint(0).x<<' '<<e.getPoint(0).y<<endl;
-            // cout<<e.getPoint(1).x<<' '<<e.getPoint(1).y<<endl;
-            // cout<<e.getPoint(2).x<<' '<<e.getPoint(2).y<<endl;
-            // cout<<endl;
-            window.draw(e);
-        }
 
+       
+
+        sf::ConvexShape tmp;tmp.setPointCount(3);
+        tmp.setFillColor(sf::Color::Transparent);
+        tmp.setOutlineColor(sf::Color::Red);
+        tmp.setOutlineThickness(-1);
+        tmp.setPoint(0,sf::Vector2f(100,100));
+        tmp.setPoint(1,sf::Vector2f(100,200));
+        tmp.setPoint(2,sf::Vector2f(100,300));
+        window.draw(tmp);
         //get fps
         frms++;
         if(frms>500) frms=0,start=chrono::steady_clock::now();
@@ -128,5 +111,5 @@ int main()
     return 0;
 }
 /*compile
-cd "/home/congyu/wsl2_cpp/lutece/math/SimpleGraphicsEngine" && g++ sge.cpp -o sge -lsfml-window -lsfml-graphics -lsfml-system && ./sge
+cd "/home/congyu/wsl2_cpp/lutece/math/SimpleGraphicsEngine" && g++ test.cpp -o test -lsfml-window -lsfml-graphics -lsfml-system && ./test
 */
