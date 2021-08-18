@@ -69,6 +69,15 @@ class camera
 public:
     vec3d pos; //camera pos (x,y,z)
     vec3d dir;  //direction. also length
+    //i found that when i rotate the camera(actually the vector dir), there is always a flote eps
+    //so if i rotate many times, the length of dir will become shorter.
+    //haven't found a effective solution, so declear a new var(length of dir);
+    double dirlen;
+
+    //8.18
+    //i found morden 3d graphic engines use Tait-Bryan_angles to describe camera direction
+    //it's convenient to rotate...
+    vec3d rotateangle;
     double angleV,angleH;
     double snwidth,snheight;//pixal
     //return pair<angleH，angleV>
@@ -93,4 +102,23 @@ class object
 public:
     int tricnt;
     vector<tri> tris;
+    void readObj(istream &is)
+    {
+        int n;
+        is>>n;
+        
+        double a,b,c;
+        for(int i=1;i<=n;i++)
+        {
+            tri tmptri;
+            is>>a>>b>>c;
+            tmptri.pts.push_back(vec3d(a,b,c));
+            is>>a>>b>>c;
+            tmptri.pts.push_back(vec3d(a,b,c));
+            is>>a>>b>>c;
+            tmptri.pts.push_back(vec3d(a,b,c));
+            tricnt++;
+            tris.push_back(tmptri);
+        }
+    }
 };

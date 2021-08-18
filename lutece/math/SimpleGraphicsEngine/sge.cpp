@@ -2,8 +2,44 @@
 using namespace std;
 double scalingfactor;
 // ofstream fout("log.out");
+ifstream fin("objinfo.in");
+///////////////////////////////////////////////////////////////////////////////////////////////
+////////////    old version(using cmr.dir)
+// void perspectiveprojection(vector<sf::ConvexShape> &vec,const object &obj,const camera &cmr)
+// {
+//     vec.clear();
+//     for(auto tria:obj.tris)
+//     {
+//         sf::ConvexShape tmp;tmp.setPointCount(3);
+//         tmp.setFillColor(sf::Color::Transparent);
+//         tmp.setOutlineColor(sf::Color::Red);
+//         tmp.setOutlineThickness(-1);
+//         for(int idx=0;idx<3;idx++)
+//         {
+//             auto t=tria.pts[idx];
+//             vec3d op=t-cmr.pos;
+//             double veclen=getlen(cmr.dir);
+//             double projlen=dotprdt(cmr.dir,op)/veclen;
+//             vec3d op1=op*(veclen/projlen);
+//             vec3d id=op1-cmr.dir;
+            
+//             // auto lambda=[&](double src,int bits) ->double{
+//             //     stringstream ss;double f;
+//             //     ss<<fixed<<setprecision(bits)<<src;
+//             //     ss>>f;
+//             //     return f;
+//             // };
+//             double  xx=round(cmr.snwidth/2-id.y*scalingfactor),yy=round(cmr.snheight/2-id.z*scalingfactor);
 
-//to be fixed. camera should be moveable;
+//             tmp.setPoint(idx,sf::Vector2f(xx,yy));
+//         }
+//         vec.push_back(tmp);
+//     }
+// }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+////////    new version(using eular angle)
 void perspectiveprojection(vector<sf::ConvexShape> &vec,const object &obj,const camera &cmr)
 {
     vec.clear();
@@ -16,21 +52,13 @@ void perspectiveprojection(vector<sf::ConvexShape> &vec,const object &obj,const 
         for(int idx=0;idx<3;idx++)
         {
             auto t=tria.pts[idx];
-            vec3d op=t-cmr.pos;
-            double veclen=getlen(cmr.dir);
-            double projlen=dotprdt(cmr.dir,op)/veclen;
-            vec3d op1=op*(veclen/projlen);
-            vec3d id=op1-cmr.dir;
-            
-            // auto lambda=[&](double src,int bits) ->double{
-            //     stringstream ss;double f;
-            //     ss<<fixed<<setprecision(bits)<<src;
-            //     ss>>f;
-            //     return f;
-            // };
-            double  xx=round(cmr.snwidth/2-id.y*scalingfactor),yy=round(cmr.snheight/2-id.z*scalingfactor);
-
-            tmp.setPoint(idx,sf::Vector2f(xx,yy));
+            vec3d ca=t-cmr.pos;
+            vec3d d;
+            auto r=cmr.rotateangle;
+            d.x=cos(r.y)*sin(r.z)*ca.y+cos(r.y)*cos(r.z)*ca.x-sin(r.y)*ca.z;
+            d.y=sin(r.x)*(cos(r.y)*ca.z+sin(r.y)*(sin(r.z)*ca.y+cos(r.z)*ca.x))+cos(r.x)*(cos(r.z)*ca.y-sin(r.z)*ca.x);
+            d.z=cos(r.x)*(cos(r.y)*ca.z+sin(r.y)*(sin(r.z)*ca.y+cos(r.z)*ca.x))-sin(r.x)*(cos(r.z)*ca.y-sin(r.z)*ca.x);
+            tmp.setPoint(idx,sf::Vector2f(round(-d.y*scalingfactor)+cmr.snwidth/2,round(-d.x*scalingfactor)+cmr.snheight/2));
         }
         vec.push_back(tmp);
     }
@@ -43,6 +71,8 @@ int main()
     cmr.snwidth=1280;
     cmr.pos=vec3d(-2.4,0,0);
     cmr.dir=vec3d(1,0,0);
+    cmr.dirlen=getlen(cmr.dir);
+    cmr.rotateangle=vec3d(0,pi/2.2,0);
     scalingfactor=200;
 
 
@@ -50,17 +80,7 @@ int main()
     //conterclockwise order(looking from outside)
     //this can identify inner or outer side of an object;
     object o;
-    o.tricnt=4;
-    tri u;
-    //need fix
-    //need an input function
-    u.pts.push_back(vec3d(1,0,0)),u.pts.push_back(vec3d(1,1,0)),u.pts.push_back(vec3d(1,0,1)); o.tris.push_back(u); u.pts.clear();
-    u.pts.push_back(vec3d(1,1,1)),u.pts.push_back(vec3d(1,1,0)),u.pts.push_back(vec3d(1,0,1)); o.tris.push_back(u); u.pts.clear();
-    u.pts.push_back(vec3d(1,1,1)),u.pts.push_back(vec3d(0,0,1)),u.pts.push_back(vec3d(1,0,1)); o.tris.push_back(u); u.pts.clear();
-    u.pts.push_back(vec3d(1,1,1)),u.pts.push_back(vec3d(0,0,1)),u.pts.push_back(vec3d(0,1,1)); o.tris.push_back(u); u.pts.clear();
-    u.pts.push_back(vec3d(1,1,1)),u.pts.push_back(vec3d(0,1,1)),u.pts.push_back(vec3d(1,1,0)); o.tris.push_back(u); u.pts.clear();
-    u.pts.push_back(vec3d(1,0,0)),u.pts.push_back(vec3d(1,0,1)),u.pts.push_back(vec3d(0,0,1)); o.tris.push_back(u); u.pts.clear();
-
+    o.readObj(fin);
     
     double rotate_angle=0;
     sf::ContextSettings settings;
@@ -80,6 +100,14 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+                cmr.rotateangle.y-=0.1;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+                cmr.rotateangle.y+=0.1;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+                cmr.rotateangle.z+=0.1;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+                cmr.rotateangle.z-=0.1;
         }
         
 
@@ -103,13 +131,10 @@ int main()
         //to be fix, 
         for(auto e:vec)
         {
-            // cout<<e.getPoint(0).x<<' '<<e.getPoint(0).y<<endl;
-            // cout<<e.getPoint(1).x<<' '<<e.getPoint(1).y<<endl;
-            // cout<<e.getPoint(2).x<<' '<<e.getPoint(2).y<<endl;
-            // cout<<endl;
             window.draw(e);
         }
-
+        
+        ///////////////////////////////////////////////
         //get fps
         frms++;
         if(frms>500) frms=0,start=chrono::steady_clock::now();
@@ -117,10 +142,10 @@ int main()
         chrono::duration<double> eps_sec=nw-start;
         fps=(int)round((double)frms/eps_sec.count());
         sf::Text t(to_string(fps),font,30);
-        t.setColor(sf::Color::Green);
+        t.setFillColor(sf::Color::Green);
         t.setPosition(0,0);
         window.draw(t);
-
+        //////////////////////////////////////////////////
 
 
         window.display();
