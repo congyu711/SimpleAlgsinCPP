@@ -68,11 +68,7 @@ class camera
 {
 public:
     vec3d pos; //camera pos (x,y,z)
-    vec3d dir;  //direction. also length
-    //i found that when i rotate the camera(actually the vector dir), there is always a flote eps
-    //so if i rotate many times, the length of dir will become shorter.
-    //haven't found a effective solution, so declear a new var(length of dir);
-    double dirlen;
+    double dist;
 
     //8.18
     //i found morden 3d graphic engines use Tait-Bryan_angles to describe camera direction
@@ -80,13 +76,7 @@ public:
     vec3d rotateangle;
     double angleV,angleH;
     double snwidth,snheight;//pixal
-    //return pair<angleH，angleV>
-    pair<double,double> getangle()
-    {
-        angleH=atan(snwidth / 2 / getlen(dir));
-        angleV=atan(snheight / 2 / getlen(dir));
-        return make_pair(angleH,angleV);
-    }
+
 };
 
 class tri
@@ -100,7 +90,6 @@ public:
 class object
 {
 public:
-    int tricnt;
     vector<tri> tris;
     void readObj(istream &is)
     {
@@ -117,8 +106,37 @@ public:
             tmptri.pts.push_back(vec3d(a,b,c));
             is>>a>>b>>c;
             tmptri.pts.push_back(vec3d(a,b,c));
-            tricnt++;
             tris.push_back(tmptri);
         }
+    }
+    bool loadfromobj(istream &is)
+    {
+        vector<vec3d> pts;
+        pts.push_back(vec3d(0,0,0));
+        char cc;string s;
+        while(is>>cc)
+        {
+            if(cc=='v')
+            {
+                double a,b,c;
+                is>>a>>b>>c;
+                pts.push_back(vec3d(a,b,c));
+                // cout<<a<<b<<c<<endl;
+            }
+            else if(cc=='f')
+            {
+                int a,b,c;
+                is>>a>>b>>c;
+                tri tmp;
+                tmp.pts.push_back(pts[a]);
+                tmp.pts.push_back(pts[b]);
+                tmp.pts.push_back(pts[c]);
+                tris.push_back(tmp);
+                // cout<<a<<b<<c<<endl;
+            }
+            else if(cc=='\n')   is>>cc;
+            else    getline(is,s);
+        }
+        return 1;
     }
 };
