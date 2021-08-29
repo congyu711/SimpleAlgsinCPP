@@ -3,7 +3,7 @@ using namespace std;
 typedef long long LL;
 
 
-namespace MR
+namespace millerrabin
 {
     //探测底数，可以满足1e18
     LL p[10] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
@@ -59,10 +59,10 @@ namespace MR
 }
 namespace PollardRho
 {
-    using namespace MR;
-    LL PR(LL n)
+    using namespace millerrabin;
+    LL PR(LL n,LL seed)
     {
-        mt19937 gen(time(nullptr));
+        mt19937 gen(seed);
         LL c=gen()%(n-1)+1;
         auto f=[&](LL x)->LL{return(x*x+c)%n;};
         LL a=f(0),b=f(a);
@@ -75,6 +75,16 @@ namespace PollardRho
         }
         return n;
     }
+    LL getonefactor(LL n)
+    {
+        if(MR(n))   return -1;
+        mt19937 seedgen;
+        while(1)
+        {
+            LL c=PR(n,seedgen());
+            if(c!=n)    return c;
+        }
+    }
 }
 
 int main()
@@ -82,6 +92,6 @@ int main()
     LL n;
     while(cin>>n)
     {
-        cout<<PollardRho::PR(n)<<endl;
+        cout<<PollardRho::getonefactor(n)<<endl;
     }
 }
